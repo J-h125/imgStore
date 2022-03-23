@@ -24,8 +24,8 @@ const ImageManage = () => {
 
   const onSearch = (value: string) => {
     console.log(value);
-    const newImgList: any[] = [];
-    imageData.forEach((item: { name: string; checked: false; path: string }) => {
+    const newImgList: { name: string; checked: boolean; path: string }[] = [];
+    imageData.forEach((item: { name: string; checked: boolean; path: string }) => {
       if (item.name.match(value)) {
         newImgList.push(item);
       }
@@ -39,7 +39,7 @@ const ImageManage = () => {
     setImgData([...imgData, newImgData]);
     console.log(imgData);
   };
-  const handleDrag = (value: any[]) => {
+  const handleDrag = (value: { name: string; checked: boolean; path: string }[]) => {
     console.log('handleDray', value);
     setImageData(value);
   };
