@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Pagination, Checkbox } from 'antd';
 import RenameModal from './RenameModal';
 import MoveModal from './MoveModal';
+import { CheckboxChangeEvent } from 'antd/lib/checkbox';
 
 type ImageListProp = {
   handleMoveSingleImg: (folderIndex: number, imgIndex: number) => void;
@@ -73,7 +74,7 @@ const ImageList = (props: ImageListProp) => {
     // setMovedImgIndex(index);
     movedImgIndex = index;
   };
-  const allowDrop = (e: any) => {
+  const allowDrop = (e: { preventDefault: () => void }) => {
     e.preventDefault();
   };
   const swapImg = (fromIndex: number, toIndex: number): any[] => {
@@ -81,7 +82,7 @@ const ImageList = (props: ImageListProp) => {
     [picData[fromIndex], picData[toIndex]] = [picData[toIndex], picData[fromIndex]];
     return picData;
   };
-  const drop = (index: number, e: any) => {
+  const drop = (index: number, e: React.DragEvent<HTMLDivElement>) => {
     console.log('drop');
     e.preventDefault();
     // setMovedInIndex(index);
@@ -97,7 +98,7 @@ const ImageList = (props: ImageListProp) => {
     console.log('删除第' + (index + 1) + '个');
     props.handleRemoveImg(index);
   };
-  const onChange = (index: number, e: any) => {
+  const onChange = (index: number, e: CheckboxChangeEvent) => {
     console.log(`checked = ${e.target.checked}--${index}`);
     let check = false;
     if (e.target.checked) {

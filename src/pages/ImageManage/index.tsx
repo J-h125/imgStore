@@ -8,12 +8,14 @@ import ImageList from './components/ImageList';
 import AddFile from './components/AddFile';
 import MoveAllModal from './components/MoveAllModal';
 import imgData1 from '@/imgPath';
-// import { searchImage } from '@/services/ant-design-pro/api';
 const { Search } = Input;
 
 const ImageManage = () => {
-  const [imgData, setImgData] = useState<any[]>(imgData1);
-  const tempImageData: [] = imgData[1].data;
+  const [imgData, setImgData] =
+    useState<{ name: string; data: { name: string; checked: boolean; path: string }[] }[]>(
+      imgData1,
+    );
+  const tempImageData: { name: string; checked: boolean; path: string }[] = imgData[1].data;
   const [imageData, setImageData] = useState<any[]>(tempImageData);
   const [chooseAll, setChooseAll] = useState<boolean>(false);
   const [imageDataName, setImageDataName] = useState<string>('在线图库');
@@ -55,7 +57,7 @@ const ImageManage = () => {
     // setImageDataIndex(value);
     // console.log('imageDataIndex' + imageDataIndex);
   };
-  const onChange = (e: any) => {
+  const onChange = (e: { target: { checked: boolean } }) => {
     console.log(`checked = ${e.target.checked}`);
     setChooseAll(e.target.checked);
     const temp = imageData;
@@ -73,7 +75,7 @@ const ImageManage = () => {
   const removeAll = () => {
     console.log('removeAll');
     if (chooseAll) {
-      const emptyData: any = [];
+      const emptyData: [] = [];
       setImageData(emptyData);
       const tempData = imgData;
       tempData.forEach((item) => {
