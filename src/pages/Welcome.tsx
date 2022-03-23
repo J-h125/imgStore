@@ -14,11 +14,10 @@ const CodePreview: React.FC = ({ children }) => (
 
 const Welcome: React.FC = () => {
   const intl = useIntl();
-  console.log(intl);
 
   return (
     <PageContainer>
-      <Card style={{ border: '1px solid red' }}>
+      <Card>
         <Alert
           message={intl.formatMessage({
             id: 'pages.welcome.alertMessage',

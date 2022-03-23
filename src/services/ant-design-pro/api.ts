@@ -83,3 +83,28 @@ export async function removeRule(options?: { [key: string]: any }) {
     ...(options || {}),
   });
 }
+// 获取用户列表
+export async function getUsers() {
+  return request('/api/userManage');
+}
+// 查询用户列表
+export async function searchUser(options?: { [key: string]: any }) {
+  return request('/api/userManage', {
+    method: 'POST',
+    ...(options || {}),
+  });
+}
+// 新增用户
+export async function addUser(options?: { [key: string]: any }) {
+  return request('/api/addUser', {
+    method: 'POST',
+    ...(options || {}),
+  });
+}
+// 按名称查询图片
+export async function searchImage(options?: { [key: string]: any }) {
+  return request('/api/searchImage', {
+    method: 'POST',
+    ...(options || {}),
+  });
+}

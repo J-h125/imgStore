@@ -26,9 +26,15 @@
   },
   {
     path: '/userManage',
-    name: 'userManage',
+    name: '用户管理',
     icon: 'smile',
     component: './UserManage',
+  },
+  {
+    path: '/imageManage',
+    name: '在线图库',
+    icon: 'smile',
+    component: './ImageManage',
   },
   {
     path: '/admin',
