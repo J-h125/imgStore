@@ -9,23 +9,21 @@ import AddFile from './components/AddFile';
 import MoveAllModal from './components/MoveAllModal';
 import imgData1 from '@/imgPath';
 // import { searchImage } from '@/services/ant-design-pro/api';
+const { Search } = Input;
 
-const ImageManage: React.FC = () => {
-  const [imgData, setImgData] = useState(imgData1);
-  const tempImageData: any[] = imgData[1].data;
-  const [imageData, setImageData] = useState(tempImageData);
-  const [chooseAll, setChooseAll] = useState(false);
-  const [imageDataName, setImageDataName] = useState('在线图库');
-  // const [imageDataIndex, setImageDataIndex] = useState(1);
-  const [visible, setVisible] = useState(false);
-  const [checkedList, setCheckedList] = useState([]);
-  const { Search } = Input;
+const ImageManage = () => {
+  const [imgData, setImgData] = useState<any[]>(imgData1);
+  const tempImageData: [] = imgData[1].data;
+  const [imageData, setImageData] = useState<any[]>(tempImageData);
+  const [chooseAll, setChooseAll] = useState<boolean>(false);
+  const [imageDataName, setImageDataName] = useState<string>('在线图库');
+  const [visible, setVisible] = useState<boolean>(false);
+  const [checkedList, setCheckedList] = useState<number[]>([]);
 
-  const onSearch = (value: any) => {
-    console.log(value === '');
-    // getSearchImage(value);
-    const newImgList: any = [];
-    imageData.forEach((item) => {
+  const onSearch = (value: string) => {
+    console.log(value);
+    const newImgList: any[] = [];
+    imageData.forEach((item: { name: string; checked: false; path: string }) => {
       if (item.name.match(value)) {
         newImgList.push(item);
       }
@@ -33,16 +31,18 @@ const ImageManage: React.FC = () => {
     setImageData(newImgList);
   };
 
-  const addFileName = (value: any) => {
+  const addFileName = (value: { name: string }) => {
+    console.log('value', value);
     const newImgData = Object.assign(value, { data: [] });
     setImgData([...imgData, newImgData]);
     console.log(imgData);
   };
-  const handleDrag = (value: any) => {
+  const handleDrag = (value: any[]) => {
+    console.log('handleDray', value);
     setImageData(value);
   };
-  const chooseFolder = (value: any) => {
-    console.log(value);
+  const chooseFolder = (value: string) => {
+    console.log('chooseFolder', value);
     console.log(imgData1);
     setImageDataName(value);
     imgData.forEach((item) => {
@@ -121,7 +121,7 @@ const ImageManage: React.FC = () => {
     });
     setImgData([...tempRemoveData]);
   };
-  const handleRenameImg = (value: any, index: number) => {
+  const handleRenameImg = (value: { imgName: string }, index: number) => {
     console.log(value, index);
     const tempData = imageData;
     for (let i = 0; i < tempData.length; i++) {
@@ -137,7 +137,7 @@ const ImageManage: React.FC = () => {
     console.log('handleMoveSingleImg', imgIndex);
     const tempData = imgData;
     let tempImg: any = {};
-    tempData.forEach((item, index) => {
+    tempData.forEach((item) => {
       if (item.name === imageDataName) {
         tempImg = item.data[imgIndex];
         handleRemoveImg(imgIndex);
@@ -159,13 +159,14 @@ const ImageManage: React.FC = () => {
     setVisible(false);
     console.log('handleMoveCancel');
   };
-  const handleMove = (value: any) => {
+  const handleMove = (value: { folder: number }) => {
+    console.log('allMove', value);
     const tempImgData = imgData;
     const folderIndex = value.folder;
     if (chooseAll) {
       console.log('handleMove', value);
       console.log('imgData', imgData);
-      tempImageData.forEach((item) => {
+      imageData.forEach((item) => {
         item.checked = false;
       });
       tempImgData[folderIndex].data = tempImgData[folderIndex].data.concat(imageData);
@@ -210,7 +211,7 @@ const ImageManage: React.FC = () => {
     console.log('handleCheckedList', checkedList);
   };
 
-  const handleImageData = (index: any, check: any) => {
+  const handleImageData = (index: number, check: boolean) => {
     const tempCheckedList = checkedList;
     if (check) {
       tempCheckedList.push(index);
@@ -313,7 +314,6 @@ const ImageManage: React.FC = () => {
               handleDrag={handleDrag}
               handleRenameImg={handleRenameImg}
               imageDataName={imageDataName}
-              chooseALL={chooseAll}
               handleCheckedList={handleCheckedList}
               handleImageData={handleImageData}
               checkedList={checkedList}

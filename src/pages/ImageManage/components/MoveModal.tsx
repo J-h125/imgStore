@@ -2,7 +2,16 @@ import * as React from 'react';
 import { Modal, Form, Select } from 'antd';
 const { Option } = Select;
 
-const MoveModal: React.FC<any> = (props) => {
+type MoveModalProps = {
+  visible: boolean;
+  handleOk: () => void;
+  handleCancel: () => void;
+  handleMove: (value: { folderIndex: number }) => void;
+  imgData: any[];
+  imageDataName: string;
+};
+
+const MoveModal = (props: MoveModalProps) => {
   const [form] = Form.useForm();
   const handleOk = () => {
     props.handleOk();
@@ -18,13 +27,6 @@ const MoveModal: React.FC<any> = (props) => {
   const handleCancel = () => {
     props.handleCancel();
   };
-  const onFinish = (values: any) => {
-    console.log('Success:', values);
-  };
-
-  const onFinishFailed = (errorInfo: any) => {
-    console.log('Failed:', errorInfo);
-  };
   return (
     <Modal title="移动图片" visible={props.visible} onOk={handleOk} onCancel={handleCancel}>
       <Form
@@ -33,8 +35,6 @@ const MoveModal: React.FC<any> = (props) => {
         labelCol={{ span: 5 }}
         wrapperCol={{ span: 16 }}
         initialValues={{ remember: true }}
-        onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
         autoComplete="off"
       >
         <Form.Item

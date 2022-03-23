@@ -1,13 +1,20 @@
 import * as React from 'react';
 import { Modal, Form, Input } from 'antd';
 
-const AddFileModal: React.FC<any> = (props) => {
+type AddFileModalProps = {
+  visible: boolean;
+  handleOk: () => void;
+  handleCancel: () => void;
+  handleFileName: (value: { folder: string }) => void;
+};
+
+const AddFileModal = (props: AddFileModalProps) => {
   const [form] = Form.useForm();
   const handleOk = () => {
     props.handleOk();
     form
       .validateFields()
-      .then((value) => {
+      .then((value: { folder: string }) => {
         props.handleFileName(value);
       })
       .catch((err) => {
@@ -16,13 +23,6 @@ const AddFileModal: React.FC<any> = (props) => {
   };
   const handleCancel = () => {
     props.handleCancel();
-  };
-  const onFinish = (values: any) => {
-    console.log('Success:', values);
-  };
-
-  const onFinishFailed = (errorInfo: any) => {
-    console.log('Failed:', errorInfo);
   };
 
   return (
@@ -33,8 +33,6 @@ const AddFileModal: React.FC<any> = (props) => {
         labelCol={{ span: 5 }}
         wrapperCol={{ span: 16 }}
         initialValues={{ remember: true }}
-        onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
         autoComplete="off"
       >
         <Form.Item

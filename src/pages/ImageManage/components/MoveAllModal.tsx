@@ -2,13 +2,22 @@ import * as React from 'react';
 import { Modal, Form, Select } from 'antd';
 const { Option } = Select;
 
-const MoveAll: React.FC<any> = (props) => {
+type MoveAllModalProps = {
+  visible: boolean;
+  handleOk: () => void;
+  handleCancel: () => void;
+  handleMove: (value: { folder: number }) => void;
+  imgData: any[];
+  imageDataName: string;
+};
+
+const MoveAll = (props: MoveAllModalProps) => {
   const [form] = Form.useForm();
   const handleOk = () => {
     props.handleOk();
     form
       .validateFields()
-      .then((value) => {
+      .then((value: { folder: number }) => {
         props.handleMove(value);
       })
       .catch((err) => {
@@ -17,13 +26,6 @@ const MoveAll: React.FC<any> = (props) => {
   };
   const handleCancel = () => {
     props.handleCancel();
-  };
-  const onFinish = (values: any) => {
-    console.log('Success:', values);
-  };
-
-  const onFinishFailed = (errorInfo: any) => {
-    console.log('Failed:', errorInfo);
   };
 
   return (
@@ -34,8 +36,6 @@ const MoveAll: React.FC<any> = (props) => {
         labelCol={{ span: 5 }}
         wrapperCol={{ span: 16 }}
         initialValues={{ remember: true }}
-        onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
         autoComplete="off"
       >
         <Form.Item

@@ -1,13 +1,21 @@
 import * as React from 'react';
 import { Modal, Form, Input } from 'antd';
 
-const RenameModal: React.FC<any> = (props) => {
+type RenameModalProps = {
+  visible: boolean;
+  handleOk: () => void;
+  handleCancel: () => void;
+  handleRename: (value: { imgName: string }) => void;
+};
+
+const RenameModal = (props: RenameModalProps) => {
   const [form] = Form.useForm();
   const handleOk = () => {
     props.handleOk();
     form
       .validateFields()
-      .then((value) => {
+      .then((value: { imgName: string }) => {
+        console.log('rename', value);
         props.handleRename(value);
       })
       .catch((err) => {
@@ -17,13 +25,6 @@ const RenameModal: React.FC<any> = (props) => {
   const handleCancel = () => {
     props.handleCancel();
   };
-  const onFinish = (values: any) => {
-    console.log('Success:', values);
-  };
-
-  const onFinishFailed = (errorInfo: any) => {
-    console.log('Failed:', errorInfo);
-  };
   return (
     <Modal title="重命名" visible={props.visible} onOk={handleOk} onCancel={handleCancel}>
       <Form
@@ -32,8 +33,6 @@ const RenameModal: React.FC<any> = (props) => {
         labelCol={{ span: 5 }}
         wrapperCol={{ span: 16 }}
         initialValues={{ remember: true }}
-        onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
         autoComplete="off"
       >
         <Form.Item
