@@ -1,16 +1,17 @@
 import * as React from 'react';
+import { useCallback } from 'react';
 import { Modal, Form, Input } from 'antd';
 
-type AddFileModalProps = {
+interface IAddFileModalProps {
   visible: boolean;
   handleOk: () => void;
   handleCancel: () => void;
   handleFileName: (value: { folder: string }) => void;
-};
+}
 
-const AddFileModal = (props: AddFileModalProps) => {
+const AddFileModal = (props: IAddFileModalProps) => {
   const [form] = Form.useForm();
-  const handleOk = () => {
+  const handleOk = useCallback(() => {
     props.handleOk();
     form
       .validateFields()
@@ -20,10 +21,10 @@ const AddFileModal = (props: AddFileModalProps) => {
       .catch((err) => {
         console.log(err);
       });
-  };
-  const handleCancel = () => {
+  }, [form, props]);
+  const handleCancel = useCallback(() => {
     props.handleCancel();
-  };
+  }, [props]);
 
   return (
     <Modal title="新建文件夹" visible={props.visible} onOk={handleOk} onCancel={handleCancel}>

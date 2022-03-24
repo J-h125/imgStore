@@ -1,16 +1,17 @@
 import * as React from 'react';
 import { Modal, Form, Input } from 'antd';
+import { useCallback } from 'react';
 
-type RenameModalProps = {
+interface IRenameModalProps {
   visible: boolean;
   handleOk: () => void;
   handleCancel: () => void;
   handleRename: (value: { imgName: string }) => void;
-};
+}
 
-const RenameModal = (props: RenameModalProps) => {
+const RenameModal = (props: IRenameModalProps) => {
   const [form] = Form.useForm();
-  const handleOk = () => {
+  const handleOk = useCallback(() => {
     props.handleOk();
     form
       .validateFields()
@@ -21,10 +22,10 @@ const RenameModal = (props: RenameModalProps) => {
       .catch((err) => {
         console.log(err);
       });
-  };
-  const handleCancel = () => {
+  }, [form, props]);
+  const handleCancel = useCallback(() => {
     props.handleCancel();
-  };
+  }, [props]);
   return (
     <Modal title="重命名" visible={props.visible} onOk={handleOk} onCancel={handleCancel}>
       <Form

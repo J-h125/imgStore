@@ -1,21 +1,20 @@
 import * as React from 'react';
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { Button, Tree } from 'antd';
 import { FolderAddOutlined } from '@ant-design/icons';
 import AddFileModal from './AddFileModal';
 const { DirectoryTree } = Tree;
 
-type AddFileProps = {
-  imgData: any[];
+interface IAddFileProps {
   addFileName: (value: { name: string }) => void;
   chooseFolder: (value: string) => void;
-};
-interface TreeDataType {
+}
+interface ITreeDataType {
   title: string;
   key: string;
-  children: any[];
+  children?: any[];
 }
-const AddFile = (props: AddFileProps) => {
+const AddFile = (props: IAddFileProps) => {
   const initTreeData = [
     {
       title: '根目录',
@@ -30,65 +29,74 @@ const AddFile = (props: AddFileProps) => {
   ];
   const [visible, setVisible] = useState<boolean>(false);
   const [selectedKey, setSelectedKey] = useState<string>('');
-  const [treeData, setTreeData] = useState<TreeDataType[]>(initTreeData);
+  const [treeData, setTreeData] = useState<ITreeDataType[]>(initTreeData);
 
-  const onSelect = (selectedKeys: React.Key[], info: any) => {
-    console.log('selected', selectedKeys, info);
-    const tempSelectedKey = selectedKeys[0].toString();
-    setSelectedKey(tempSelectedKey);
-    console.log(selectedKey);
-    props.chooseFolder(info.node.title);
-    console.log(info.node.title);
-  };
+  const onSelect = useCallback(
+    (selectedKeys: React.Key[], info: any) => {
+      console.log('selected', selectedKeys, info);
+      const tempSelectedKey = selectedKeys[0].toString();
+      setSelectedKey(tempSelectedKey);
+      console.log(selectedKey);
+      props.chooseFolder(info.node.title);
+      console.log(info.node.title);
+    },
+    [props, selectedKey],
+  );
 
-  const showModal = () => {
+  const showModal = useCallback(() => {
     setVisible(true);
     console.log('showModel');
-  };
-  const handleOk = () => {
+  }, []);
+  const handleOk = useCallback(() => {
     console.log('handleOk');
     setVisible(false);
-  };
-  const handleCancel = () => {
+  }, []);
+  const handleCancel = useCallback(() => {
     console.log('handleCancel');
     setVisible(false);
-  };
-  const addNode = (addTreeData: TreeDataType[], value: { folder: string }) => {
-    addTreeData.forEach((item: TreeDataType) => {
-      console.log('item.key', item.key);
+  }, []);
+  const addNode = useCallback(
+    (addTreeData: ITreeDataType[], value: { folder: string }) => {
+      addTreeData.forEach((item: ITreeDataType) => {
+        console.log('item.key', item.key);
 
-      if (item.key === selectedKey) {
-        console.log('add', item.key);
-        if (item.children) {
-          item.children.push({
-            title: value.folder,
-            key: selectedKey + '-' + item.children.length,
-            children: [],
-          });
+        if (item.key === selectedKey) {
+          console.log('add', item.key);
+          if (item.children) {
+            item.children.push({
+              title: value.folder,
+              key: selectedKey + '-' + item.children.length,
+              children: [],
+            });
+          } else {
+            item.children = [];
+            item.children.push({
+              title: value.folder,
+              key: selectedKey + '-' + item.children.length,
+              children: [],
+            });
+          }
         } else {
-          item.children = [];
-          item.children.push({
-            title: value.folder,
-            key: selectedKey + '-' + item.children.length,
-            children: [],
-          });
+          if (item.children && item.children.length) {
+            addNode(item.children, value);
+          }
         }
-      } else {
-        if (item.children && item.children.length) {
-          addNode(item.children, value);
-        }
-      }
-    });
-  };
-  const handleFileName = (value: { folder: string }) => {
-    const filename = { name: value.folder };
-    const tempTreeData = treeData;
-    addNode(treeData, value);
-    setTreeData([...tempTreeData]);
-    console.log('this.treeData', treeData);
-    console.log('filename', filename);
-    props.addFileName(filename);
-  };
+      });
+    },
+    [selectedKey],
+  );
+  const handleFileName = useCallback(
+    (value: { folder: string }) => {
+      const filename = { name: value.folder };
+      const tempTreeData = treeData;
+      addNode(treeData, value);
+      setTreeData([...tempTreeData]);
+      console.log('this.treeData', treeData);
+      console.log('filename', filename);
+      props.addFileName(filename);
+    },
+    [addNode, props, treeData],
+  );
 
   return (
     <div>

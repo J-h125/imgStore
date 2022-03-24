@@ -1,19 +1,31 @@
 import * as React from 'react';
 import { Modal, Form, Select } from 'antd';
+import { useCallback, useContext } from 'react';
+import { ImgDataContext } from '..';
 const { Option } = Select;
 
-type MoveAllModalProps = {
+interface IMoveAllModalProps {
   visible: boolean;
   handleOk: () => void;
   handleCancel: () => void;
   handleMove: (value: { folder: number }) => void;
-  imgData: any[];
   imageDataName: string;
-};
+}
+interface IImageDataType {
+  name: string;
+  checked: boolean;
+  path: string | undefined;
+}
+interface IImgDataType {
+  name: string;
+  data: IImageDataType[];
+}
 
-const MoveAll = (props: MoveAllModalProps) => {
+const MoveAll = (props: IMoveAllModalProps) => {
   const [form] = Form.useForm();
-  const handleOk = () => {
+  const imgData = useContext<IImgDataType[]>(ImgDataContext);
+
+  const handleOk = useCallback(() => {
     props.handleOk();
     form
       .validateFields()
@@ -23,10 +35,10 @@ const MoveAll = (props: MoveAllModalProps) => {
       .catch((err) => {
         console.log(err);
       });
-  };
-  const handleCancel = () => {
+  }, [form, props]);
+  const handleCancel = useCallback(() => {
     props.handleCancel();
-  };
+  }, [props]);
 
   return (
     <Modal title="移动图片" visible={props.visible} onOk={handleOk} onCancel={handleCancel}>
@@ -44,12 +56,12 @@ const MoveAll = (props: MoveAllModalProps) => {
           rules={[{ required: true, message: '请输入文件夹名称' }]}
         >
           <Select placeholder="请选择文件夹">
-            {props.imgData.map((item: any, index: number) => {
+            {imgData.map((item: IImgDataType, index: number) => {
               if (item.name === props.imageDataName) {
                 return null;
               } else {
                 return (
-                  <Option key={item + index} value={index}>
+                  <Option key={index} value={index}>
                     {item.name}
                   </Option>
                 );
